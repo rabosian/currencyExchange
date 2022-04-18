@@ -1,20 +1,13 @@
+
+    
 let currencyRatio = {
     USD:{
-        USD: 1,
-        KRW: 1187.02,
-        CAD: 1.28,
         unit: "Dollar"
     },
     KRW:{
-        KRW: 1,
-        USD: 0.00084,
-        CAD: 0.0011,
         unit: "Won"
     },
     CAD:{
-        CAD: 1,
-        USD: 0.78,
-        KRW: 926.53,
         unit: "Canadian Dollar"
     }
 }
@@ -37,7 +30,22 @@ document.querySelectorAll("#to-list a").forEach((item)=> item.addEventListener("
 }));
 
 function convert() {
-    let amount = document.getElementById("from-input").value
-    let result = amount * currencyRatio[fromCurrency][toCurrency]
-    document.getElementById("to-input").value = result;
+    var requestURL = `https://api.exchangerate.host/convert?from=${fromCurrency}&to=${toCurrency}`
+
+    var request = new XMLHttpRequest();
+    request.open('GET', requestURL);
+    request.responseType = 'json';
+    request.send();
+
+    request.onload = function() {
+        var response = request.response;
+        console.log(response.result);
+        
+        let amount = document.getElementById("from-input").value;
+        let result = amount * response.result;
+        document.getElementById("to-input").value = result.toFixed(5);
+    }
+
+
 }
+
